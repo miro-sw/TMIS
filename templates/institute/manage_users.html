@@ -1,163 +1,197 @@
 {% extends 'institute/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="content-card">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 style="color: #1e3a8a;">
-            <i class="fas fa-users-cog me-2"></i>MANAGE USERS
-        </h1>
-        <a href="{% url 'register' %}" class="btn btn-primary">
-            <i class="fas fa-user-plus me-1"></i> Create New User
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+            <h1 class="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                <i class="fas fa-users-cog text-indigo-600 dark:text-indigo-400"></i>
+                Manage Users
+            </h1>
+            <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Administer system accounts and permissions</p>
+        </div>
+        <a href="{% url 'register' %}"
+            class="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl shadow-sm transition-colors">
+            <i class="fas fa-plus mr-2"></i> Create User
         </a>
     </div>
-    
-    <!-- Display messages -->
-    {% if messages %}
-        {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        {% endfor %}
-    {% endif %}
-    
-    <!-- Users Table -->
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead class="table-dark">
-                <tr>
-                    <th>SL No.</th>
-                    <th>Edit</th>
-                    <th>UID</th>
-                    <th>NAME</th>
-                    <th>PASSWORD</th>
-                    <th>TYPE</th>
-                    <th>PURPOSE</th>
-                    <th>STATUS</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in users %}
-                <tr>
-                    <td>{{ forloop.counter }}</td>
-                    <td>
-                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editModal{{ user.id }}">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                    </td>
-                    <td>{{ user.uid }}</td>
-                    <td>{{ user.username }}</td>
-                    <td>••••••</td>
-                    <td>
-                        <span class="badge bg-{% if user.user_type == 'admin' %}danger{% elif user.user_type == 'student' %}success{% else %}info{% endif %}">
-                            {{ user.user_type|upper }}
-                        </span>
-                    </td>
-                    <td>{{ user.store_name|default:"-" }}</td>
-                    <td>
-                        <span class="badge bg-{% if user.status == 'active' %}success{% else %}secondary{% endif %}">
-                            {{ user.status|upper }}
-                        </span>
-                    </td>
-                    <td>
-                        <button class="btn btn-sm btn-danger delete-btn" 
-                                data-user-id="{{ user.id }}" 
-                                data-user-name="{{ user.username }}">
-                            <i class="fas fa-trash"></i> Delete
-                        </button>
-                    </td>
-                </tr>
 
-                <!-- Edit User Modal -->
-                <div class="modal fade" id="editModal{{ user.id }}" tabindex="-1" aria-labelledby="editModalLabel{{ user.id }}" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="editModalLabel{{ user.id }}">Edit User - {{ user.username }}</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <form method="POST" action="{% url 'edit_user' user.id %}">
-                        {% csrf_token %}
-                        <div class="modal-body">
-                            <div class="mb-3">
-                                <label for="username{{ user.id }}" class="form-label">Username</label>
-                                <input type="text" class="form-control" id="username{{ user.id }}" name="username" value="{{ user.username }}" required>
+    <!-- Messages -->
+    {% if messages %}
+    <div class="space-y-2">
+        {% for message in messages %}
+        <div
+            class="p-4 rounded-xl {% if message.tags == 'success' %}bg-green-50 text-green-700 border border-green-200{% elif message.tags == 'error' %}bg-red-50 text-red-700 border border-red-200{% else %}bg-blue-50 text-blue-700 border border-blue-200{% endif %} flex justify-between items-center">
+            <span class="text-sm font-medium">{{ message }}</span>
+            <button onclick="this.parentElement.remove()" class="text-current opacity-50 hover:opacity-100"><i
+                    class="fas fa-times"></i></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Users Table -->
+    <div
+        class="bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                    <tr
+                        class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 dark:text-slate-400 text-xs uppercase tracking-wider">
+                        <th class="p-4 font-semibold w-16">#</th>
+                        <th class="p-4 font-semibold">User Details</th>
+                        <th class="p-4 font-semibold">Role</th>
+                        <th class="p-4 font-semibold">Status</th>
+                        <th class="p-4 font-semibold text-right">Actions</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+                    {% for user in users %}
+                    <tr class="hover:bg-slate-50 dark:hover:bg-slate-700/50 transition-colors">
+                        <td class="p-4 text-slate-400 font-mono text-sm">{{ forloop.counter }}</td>
+                        <td class="p-4">
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-10 h-10 rounded-full bg-indigo-100 dark:bg-indigo-900/30 flex items-center justify-center text-indigo-600 dark:text-indigo-400 font-bold text-sm">
+                                    {{ user.username|slice:":2"|upper }}
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-slate-900 dark:text-white">{{ user.username }}</p>
+                                    <p class="text-xs text-slate-500 font-mono">{{ user.uid }}</p>
+                                </div>
                             </div>
-                            <div class="mb-3">
-                                <label for="user_type{{ user.id }}" class="form-label">User Type</label>
-                                <select class="form-select" id="user_type{{ user.id }}" name="user_type" required>
-                                    <option value="admin" {% if user.user_type == 'admin' %}selected{% endif %}>Admin</option>
-                                    <option value="student" {% if user.user_type == 'student' %}selected{% endif %}>Student</option>
-                                    <option value="staff" {% if user.user_type == 'staff' %}selected{% endif %}>Staff</option>
-                                </select>
+                        </td>
+                        <td class="p-4">
+                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium 
+                                {% if user.user_type == 'admin' %}bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300
+                                {% elif user.user_type == 'student' %}bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300
+                                {% else %}bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300{% endif %}">
+                                {{ user.user_type|upper }}
+                            </span>
+                        </td>
+                        <td class="p-4">
+                            <span
+                                class="flex items-center gap-1.5 text-sm font-medium {% if user.status == 'active' %}text-emerald-600 dark:text-emerald-400{% else %}text-slate-500{% endif %}">
+                                <span
+                                    class="w-2 h-2 rounded-full {% if user.status == 'active' %}bg-emerald-500{% else %}bg-slate-400{% endif %}"></span>
+                                {{ user.status|title }}
+                            </span>
+                        </td>
+                        <td class="p-4 text-right">
+                            <div class="flex items-center justify-end gap-2">
+                                <button onclick="openEditModal('{{ user.id }}')"
+                                    class="p-2 text-slate-400 hover:text-amber-500 transition-colors bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg shadow-sm">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button onclick="confirmDelete('{{ user.id }}', '{{ user.username }}')"
+                                    class="p-2 text-slate-400 hover:text-red-500 transition-colors bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 rounded-lg shadow-sm">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
                             </div>
-                            <div class="mb-3">
-                                <label for="status{{ user.id }}" class="form-label">Status</label>
-                                <select class="form-select" id="status{{ user.id }}" name="status" required>
-                                    <option value="active" {% if user.status == 'active' %}selected{% endif %}>Active</option>
-                                    <option value="inactive" {% if user.status == 'inactive' %}selected{% endif %}>Inactive</option>
-                                </select>
-                            </div>
-                            <!-- Add UID field -->
-                            <div class="mb-3">
-                                <label for="uid{{ user.id }}" class="form-label">UID</label>
-                                <input type="text" class="form-control" id="uid{{ user.id }}" name="uid" value="{{ user.uid }}" required>
+                        </td>
+                    </tr>
+
+                    <!-- Edit Modal (Hidden Helper) -->
+                    <dialog id="editModal{{ user.id }}"
+                        class="modal-helper hidden fixed inset-0 z-50 overflow-y-auto w-full h-full bg-transparent">
+                        <div class="fixed inset-0 bg-black/50 backdrop-blur-sm"
+                            onclick="closeEditModal('{{ user.id }}')"></div>
+                        <div class="relative min-h-[calc(100vh-4rem)] flex items-center justify-center p-4">
+                            <div class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl w-full max-w-md p-6 relative">
+                                <h3 class="text-lg font-bold text-slate-800 dark:text-white mb-4">Edit User: {{
+                                    user.username }}</h3>
+                                <form method="POST" action="{% url 'edit_user' user.id %}" class="space-y-4">
+                                    {% csrf_token %}
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Username</label>
+                                        <input type="text" name="username" value="{{ user.username }}"
+                                            class="w-full px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">UID</label>
+                                        <input type="text" name="uid" value="{{ user.uid }}"
+                                            class="w-full px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Role</label>
+                                        <select name="user_type"
+                                            class="w-full px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                                            <option value="admin" {% if user.user_type=='admin' %}selected{% endif %}>
+                                                Admin</option>
+                                            <option value="student" {% if user.user_type=='student' %}selected{% endif
+                                                %}>Student</option>
+                                            <option value="staff" {% if user.user_type=='staff' %}selected{% endif %}>
+                                                Staff</option>
+                                        </select>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Status</label>
+                                        <select name="status"
+                                            class="w-full px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-slate-900 dark:text-white focus:ring-2 focus:ring-indigo-500">
+                                            <option value="active" {% if user.status=='active' %}selected{% endif %}>
+                                                Active</option>
+                                            <option value="inactive" {% if user.status=='inactive' %}selected{% endif
+                                                %}>Inactive</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="flex justify-end gap-3 pt-4">
+                                        <button type="button" onclick="closeEditModal('{{ user.id }}')"
+                                            class="px-4 py-2 text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-lg">Cancel</button>
+                                        <button type="submit"
+                                            class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg shadow-sm">Save
+                                            Changes</button>
+                                    </div>
+                                </form>
                             </div>
                         </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Save changes</button>
-                        </div>
-                    </form>
-                    </div>
-                    </div>
-                </div>
-                {% empty %}
-                <tr>
-                    <td colspan="9" class="text-center">No users found</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                    </dialog>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="p-8 text-center text-slate-500">No users found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 
 <script>
-// Delete user function
-document.addEventListener('DOMContentLoaded', function() {
-    // Add event listeners to all delete buttons
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
-            const userName = this.getAttribute('data-user-name');
-            
-            if (confirm(`Are you sure you want to delete user "${userName}"? This action cannot be undone.`)) {
-                deleteUser(userId);
-            }
-        });
-    });
-});
+    function openEditModal(userId) {
+        document.getElementById('editModal' + userId).classList.remove('hidden');
+    }
 
-function deleteUser(userId) {
-    // Create a form dynamically
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = `/delete_user/${userId}/`;
-    
-    // Add CSRF token
-    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
-    const csrfInput = document.createElement('input');
-    csrfInput.type = 'hidden';
-    csrfInput.name = 'csrfmiddlewaretoken';
-    csrfInput.value = csrfToken;
-    form.appendChild(csrfInput);
-    
-    // Submit the form
-    document.body.appendChild(form);
-    form.submit();
-}
+    function closeEditModal(userId) {
+        document.getElementById('editModal' + userId).classList.add('hidden');
+    }
+
+    function confirmDelete(userId, userName) {
+        if (confirm(`Are you sure you want to delete user "${userName}"?`)) {
+            // Create form to submit delete
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/delete_user/${userId}/`;
+
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrfmiddlewaretoken';
+            csrf.value = '{{ csrf_token }}';
+            form.appendChild(csrf);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
+    }
 </script>
 {% endblock %}

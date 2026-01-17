@@ -1,78 +1,161 @@
 {% extends 'institute/base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="content-card">
-    <!-- Hero Section -->
-    <div class="text-center mb-5">
-        <h1 class="display-4 mb-4" style="color: #1e3a8a;">Welcome to The Mother Institute of Science</h1>
-        <p class="lead mb-4">Excellence in Science Education Since 2005</p>
-        <a href="{% url 'admission_form' %}" class="btn btn-primary btn-lg">Apply for Admission</a>
+<!-- Hero Section -->
+<div class="relative overflow-hidden mb-12 rounded-3xl bg-indigo-900/5 dark:bg-indigo-900/20 p-8 sm:p-16 text-center">
+    <div
+        class="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,white,rgba(255,255,255,0.6))] dark:bg-grid-slate-700/25 dark:[mask-image:linear-gradient(0deg,rgba(255,255,255,0.1),rgba(255,255,255,0.5))] pointer-events-none">
     </div>
-
-    <!-- Features -->
-    <h2 class="text-center mb-5">Our Facilities</h2>
-    <div class="row">
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center p-4 border-0 shadow-sm">
-                <i class="fas fa-flask fa-3x text-primary mb-3"></i>
-                <h4>Modern Labs</h4>
-                <p>State-of-the-art laboratories for Physics, Chemistry, and Biology</p>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center p-4 border-0 shadow-sm">
-                <i class="fas fa-book fa-3x text-primary mb-3"></i>
-                <h4>Expert Faculty</h4>
-                <p>Experienced and dedicated teaching staff</p>
-            </div>
-        </div>
-        <div class="col-md-4 mb-4">
-            <div class="card h-100 text-center p-4 border-0 shadow-sm">
-                <i class="fas fa-home fa-3x text-primary mb-3"></i>
-                <h4>Hostel Facilities</h4>
-                <p>Safe and comfortable accommodation for students</p>
-            </div>
+    <div class="relative z-10 max-w-2xl mx-auto">
+        <h1 class="text-4xl sm:text-5xl font-extrabold text-slate-900 dark:text-white mb-6 tracking-tight">
+            Welcome to <br>
+            <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 to-purple-600">The Mother
+                Institute of Science</span>
+        </h1>
+        <p class="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed">
+            Excellence in Science Education Since 2005. Nurturing the next generation of scientists and innovators with
+            world-class facilities.
+        </p>
+        <div class="flex justify-center gap-4">
+            <a href="{% url 'admission_form' %}"
+                class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-500/30 transition-all duration-200 transform hover:-translate-y-1">
+                Apply for Admission
+                <i class="fas fa-arrow-right ml-2"></i>
+            </a>
+            <a href="#"
+                class="inline-flex items-center px-6 py-3 border border-slate-200 dark:border-slate-700 text-base font-medium rounded-xl text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-800 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all duration-200">
+                Learn More
+            </a>
         </div>
     </div>
 </div>
 
-<div class="content-card">
-    <!-- Courses -->
-    <h2 class="text-center mb-5">Our Programs</h2>
-    <div class="row">
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">11th Class Science</h5>
-                    <p class="card-text">Comprehensive coaching for 11th standard</p>
-                </div>
+<!-- Facilities Section -->
+<div class="mb-16">
+    <h2 class="text-3xl font-bold text-center text-slate-900 dark:text-white mb-10">Our Facilities</h2>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <!-- Card 1 -->
+        <div
+            class="group p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 hover:-translate-y-1">
+            <div
+                class="w-14 h-14 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-flask text-2xl text-blue-600 dark:text-blue-400"></i>
             </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Modern Labs</h3>
+            <p class="text-slate-600 dark:text-slate-400">State-of-the-art laboratories for Physics, Chemistry, and
+                Biology equipped with the latest instruments.</p>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">12th Class Science</h5>
-                    <p class="card-text">Complete preparation for 12th board exams</p>
-                </div>
+
+        <!-- Card 2 -->
+        <div
+            class="group p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 hover:-translate-y-1">
+            <div
+                class="w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-book text-2xl text-purple-600 dark:text-purple-400"></i>
             </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Expert Faculty</h3>
+            <p class="text-slate-600 dark:text-slate-400">Experienced and dedicated teaching staff committed to
+                students' academic excellence.</p>
         </div>
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">NEET/JEE</h5>
-                    <p class="card-text">Competitive exam preparation</p>
-                </div>
+
+        <!-- Card 3 -->
+        <div
+            class="group p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 dark:border-slate-700 hover:-translate-y-1">
+            <div
+                class="w-14 h-14 rounded-full bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                <i class="fas fa-home text-2xl text-emerald-600 dark:text-emerald-400"></i>
             </div>
-        </div>
-        <div class="col-md-3 mb-4">
-            <div class="card h-100 border-0 shadow-sm">
-                <div class="card-body text-center">
-                    <h5 class="card-title">Summer Program</h5>
-                    <p class="card-text">Special courses during summer vacation</p>
-                </div>
-            </div>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">Hostel Facilities</h3>
+            <p class="text-slate-600 dark:text-slate-400">Safe, comfortable, and conducive residential accommodation for
+                students.</p>
         </div>
     </div>
 </div>
 
+<!-- Programs Section -->
+<div class="mb-16">
+    <h2 class="text-3xl font-bold text-center text-slate-900 dark:text-white mb-10">Our Programs</h2>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Program 1 -->
+        <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 text-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-2">11th Class Science</h4>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Comprehensive coaching building strong foundations.
+            </p>
+        </div>
+
+        <!-- Program 2 -->
+        <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 text-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-2">12th Class Science</h4>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Focused preparation for board exams and beyond.</p>
+        </div>
+
+        <!-- Program 3 -->
+        <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 text-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-2">NEET/JEE</h4>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Intensive competitive exam preparation programs.</p>
+        </div>
+
+        <!-- Program 4 -->
+        <div
+            class="bg-white dark:bg-slate-800 rounded-xl p-6 text-center border border-slate-100 dark:border-slate-700 shadow-sm hover:shadow-md transition-shadow">
+            <h4 class="text-lg font-bold text-slate-900 dark:text-white mb-2">Summer Program</h4>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Specialized courses to utilize break productively.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Home Page Footer -->
+<div class="bg-slate-900 text-slate-300 rounded-3xl p-8 sm:p-12 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center md:text-left">
+        <!-- Brand -->
+        <div class="flex flex-col items-center md:items-start">
+            <img src="../../media/logo/tmis_logo.jpeg" alt="TMIS Logo" class="w-16 h-16 rounded-lg mb-4">
+            <h5 class="text-white font-bold text-lg">The Mother Institute of Science</h5>
+            <p class="text-sm text-slate-400">- TMIS -</p>
+        </div>
+
+        <!-- Contact -->
+        <div>
+            <h5 class="text-white font-bold mb-4">Contact Information</h5>
+            <ul class="space-y-3 text-sm">
+                <li class="flex items-start justify-center md:justify-start gap-3">
+                    <i class="fas fa-map-marker-alt mt-1"></i>
+                    <span>Trilochanpada, Jajpur Town, Near Maa Biraja Temple</span>
+                </li>
+                <li class="flex items-center justify-center md:justify-start gap-3">
+                    <i class="fas fa-phone"></i>
+                    <span>+91 9439387324</span>
+                </li>
+                <li class="flex items-center justify-center md:justify-start gap-3">
+                    <i class="fas fa-envelope"></i>
+                    <span>contact@motherinstitute.edu</span>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Links -->
+        <div>
+            <h5 class="text-white font-bold mb-4">Quick Links</h5>
+            <ul class="space-y-2 text-sm">
+                <li><a href="{% url 'home' %}" class="hover:text-white transition-colors">Home</a></li>
+                <li><a href="{% url 'admission_form' %}" class="hover:text-white transition-colors">Admission Form</a>
+                </li>
+                {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}" class="hover:text-white transition-colors">Logout</a></li>
+                {% else %}
+                <li><a href="{% url 'login' %}" class="hover:text-white transition-colors">Login</a></li>
+                <li><a href="{% url 'register' %}" class="hover:text-white transition-colors">Register</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    <div class="border-t border-slate-800 mt-10 pt-6 text-center text-xs text-slate-500">
+        <p>&copy; 2024 The Mother Institute of Science. All rights reserved.</p>
+        <p class="mt-1">Software Developed by <strong class="text-indigo-400">MIRO SOFTWARE</strong></p>
+    </div>
+</div>
 {% endblock %}

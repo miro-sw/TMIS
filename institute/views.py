@@ -94,6 +94,7 @@ def register_organization(request):
 @login_required
 def admin_dashboard(request):
     if request.user.user_type != 'admin':
+        messages.error(request, 'Access denied. Administrator privileges required.')
         return redirect('home')
     
     total_users = CustomUser.objects.exclude(user_type='admin').count()
@@ -138,6 +139,7 @@ def admin_dashboard(request):
 @login_required
 def manage_users(request):
     if request.user.user_type != 'admin':
+        messages.error(request, 'Access denied. Administrator privileges required.')
         return redirect('home')
     
     users = CustomUser.objects.all().order_by('id')

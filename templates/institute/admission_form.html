@@ -3,266 +3,217 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h4 class="mb-0 text-center">
-                <i class="fas fa-file-alt"></i> THE MOTHER INSTITUTE OF SCIENCE<br>
-                <small>Trilochanpada, Jajpur Town, Near Maa Biraja Temple</small><br>
-                <small>Contact: +91 9439387324</small>
-            </h4>
-            <h5 class="text-center mb-0 mt-2">AGREEMENT / ADMISSION FORM</h5>
+<div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+    <div
+        class="bg-white dark:bg-slate-800 rounded-2xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-8 text-center text-white">
+            <h4 class="text-2xl font-extrabold mb-1">THE MOTHER INSTITUTE OF SCIENCE</h4>
+            <p class="text-sm text-blue-100">Trilochanpada, Jajpur Town, Near Maa Biraja Temple</p>
+            <p class="text-sm text-blue-100 mb-4">Contact: +91 9439387324</p>
+            <div class="inline-block px-6 py-2 bg-white/10 backdrop-blur-sm rounded-full border border-white/20">
+                <h5 class="text-lg font-bold m-0 flex items-center gap-2">
+                    <i class="fas fa-file-signature"></i> AGREEMENT / ADMISSION FORM
+                </h5>
+            </div>
         </div>
-        <div class="card-body">
-            <!-- ADD enctype="multipart/form-data" to the form -->
-            <form method="POST" enctype="multipart/form-data" id="admissionForm">
+
+        <div class="p-6 md:p-8">
+            <form method="POST" enctype="multipart/form-data" id="admissionForm" class="space-y-10">
                 {% csrf_token %}
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">Personal Details :</h5>
-                    </div>
-                    
-                    <!-- Compact Student Photo Section -->
-                    <div class="col-md-3 mb-3">
-                        <div class="card h-100">
-                            <div class="card-header bg-light py-2">
-                                <h6 class="mb-0 text-center">
-                                    <i class="fas fa-camera me-1"></i> Student Photo
-                                </h6>
-                            </div>
-                            <div class="card-body p-3 text-center">
-                                <!-- Current/Preview Image Display -->
-                                <div id="imageDisplayContainer" class="mb-2">
+
+                <!-- Section 1: Top Area (Photo & Personal Details) -->
+                <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+                    <!-- Photo Upload -->
+                    <div class="lg:col-span-1">
+                        <div
+                            class="bg-slate-50 dark:bg-slate-900/50 rounded-xl p-4 border border-slate-200 dark:border-slate-700 h-full">
+                            <h6
+                                class="text-center font-bold text-slate-700 dark:text-slate-300 mb-4 pb-2 border-b border-slate-200 dark:border-slate-700">
+                                <i class="fas fa-camera mr-2"></i> Student Photo
+                            </h6>
+
+                            <div class="text-center">
+                                <!-- Preview Area -->
+                                <div id="imageDisplayContainer"
+                                    class="aspect-[3/4] w-full bg-white dark:bg-slate-800 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-600 flex items-center justify-center overflow-hidden mb-4 relative group cursor-pointer transition-colors hover:border-indigo-500 dark:hover:border-indigo-500">
                                     {% if form.instance.student_image %}
-                                        <img src="{{ form.instance.student_image.url }}" 
-                                                alt="Student Photo" 
-                                                class="img-fluid rounded" 
-                                                style="max-height: 150px; object-fit: cover; cursor: pointer;"
-                                                data-bs-toggle="modal" 
-                                                data-bs-target="#imagePreviewModal">
+                                    <img src="{{ form.instance.student_image.url }}" alt="Student Photo"
+                                        class="w-full h-full object-cover" onclick="showPreview(this.src)">
                                     {% else %}
-                                        <div class="border rounded p-3 bg-light" style="height: 150px; display: flex; align-items: center; justify-content: center;">
-                                            <div>
-                                                <i class="fas fa-user-circle fa-3x text-muted"></i>
-                                                <p class="mt-2 small text-muted mb-0">No photo uploaded</p>
-                                            </div>
-                                        </div>
+                                    <div class="text-slate-400 group-hover:text-indigo-500 transition-colors">
+                                        <i class="fas fa-user-circle text-6xl mb-2"></i>
+                                        <p class="text-xs">No photo uploaded</p>
+                                    </div>
                                     {% endif %}
+                                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                                        onclick="document.getElementById('student_image_upload').click()">
+                                        <span class="text-white text-sm font-medium"><i class="fas fa-edit mr-1"></i>
+                                            Change</span>
+                                    </div>
                                 </div>
-                                
-                                <!-- Upload Button -->
-                                <div class="upload-btn-wrapper mt-2">
-                                    <button type="button" class="btn btn-outline-primary btn-sm w-100" onclick="document.getElementById('student_image_upload').click()">
-                                        <i class="fas fa-upload me-1"></i> Upload Photo
-                                    </button>
-                                    <input type="file" 
-                                            class="d-none" 
-                                            name="student_image" 
-                                            id="student_image_upload"
-                                            accept="image/*">
-                                </div>
-                                
-                                <!-- File Info -->
-                                <div id="fileInfo" class="mt-2 small text-muted" style="display: none;">
-                                    <i class="fas fa-file-image"></i> <span id="fileName"></span>
-                                    
-                                </div>
-                                
+
+                                <!-- Upload Controls -->
+                                <input type="file" class="hidden" name="student_image" id="student_image_upload"
+                                    accept="image/*">
+                                <button type="button" onclick="document.getElementById('student_image_upload').click()"
+                                    class="w-full py-2 px-4 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-600 transition-colors shadow-sm">
+                                    <i class="fas fa-upload mr-2"></i> Upload Photo
+                                </button>
+                                <p id="fileName" class="text-xs text-slate-500 mt-2 truncate hidden"></p>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Personal Details Fields -->
-                    <div class="col-md-9">
-                        <div class="row">
-                            <div class="col-md-4">
-                                {{ form.student_name|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4">
-                                {{ form.father_name|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4">
-                                {{ form.mother_name|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4">
-                                {{ form.date_of_birth|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4">
-                                {{ form.mobile_number|as_crispy_field }}
-                            </div>
-                            <div class="col-md-4">
-                                {{ form.address|as_crispy_field }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form.adhaar_number|as_crispy_field }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form.whatsapp_number|as_crispy_field }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form.blood_group|as_crispy_field }}
-                            </div>
-                            <div class="col-md-3">
-                                {{ form.category|as_crispy_field }}
-                            </div>
+
+                    <!-- Personal Details -->
+                    <div class="lg:col-span-3">
+                        <h5
+                            class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                            <i class="fas fa-user"></i> Personal Details
+                        </h5>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <!-- Using standard Crispy rendering, but styled via wrapper or config if possible. 
+                                  If direct field access is needed for layout, we iterate manually. -->
+                            <div>{{ form.student_name|as_crispy_field }}</div>
+                            <div>{{ form.father_name|as_crispy_field }}</div>
+                            <div>{{ form.mother_name|as_crispy_field }}</div>
+                            <div>{{ form.date_of_birth|as_crispy_field }}</div>
+                            <div>{{ form.mobile_number|as_crispy_field }}</div>
+                            <div>{{ form.address|as_crispy_field }}</div>
+                            <div>{{ form.adhaar_number|as_crispy_field }}</div>
+                            <div>{{ form.whatsapp_number|as_crispy_field }}</div>
+                            <div>{{ form.blood_group|as_crispy_field }}</div>
+                            <div>{{ form.category|as_crispy_field }}</div>
                         </div>
                     </div>
                 </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">ADMITTED COLLEGE DETAILS:</h5>
+
+                <!-- Admitted College Details -->
+                <section>
+                    <h5
+                        class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                        <i class="fas fa-university"></i> Admitted College Details
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="md:col-span-2 lg:col-span-1">{{ form.college_name|as_crispy_field }}</div>
+                        <div>{{ form.board_name|as_crispy_field }}</div>
+                        <div>{{ form.college_roll_no|as_crispy_field }}</div>
+                        <div>{{ form.batch|as_crispy_field }}</div>
+                        <div>{{ form.eleventh_year|as_crispy_field }}</div>
+                        <div>{{ form.twelfth_year|as_crispy_field }}</div>
+                        <div>{{ form.course|as_crispy_field }}</div>
                     </div>
-                    <div class="col-md-4">
-                        {{ form.college_name|as_crispy_field }}
+                </section>
+
+                <!-- Visitors List -->
+                <section>
+                    <h5
+                        class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                        <i class="fas fa-users"></i> Visitors List
+                    </h5>
+                    <div
+                        class="grid grid-cols-1 md:grid-cols-3 gap-6 bg-slate-50 dark:bg-slate-900/30 p-6 rounded-xl border border-slate-100 dark:border-slate-700">
+                        <div
+                            class="md:col-span-3 lg:col-span-3 mb-2 font-medium text-slate-500 dark:text-slate-400 uppercase text-xs tracking-wider">
+                            Visitor 1</div>
+                        <div>{{ form.visitor1_name|as_crispy_field }}</div>
+                        <div>{{ form.visitor1_relation|as_crispy_field }}</div>
+                        <div>{{ form.visitor1_contact|as_crispy_field }}</div>
+
+                        <div
+                            class="md:col-span-3 lg:col-span-3 mt-4 mb-2 font-medium text-slate-500 dark:text-slate-400 uppercase text-xs tracking-wider border-t border-slate-200 dark:border-slate-700 pt-4">
+                            Visitor 2</div>
+                        <div>{{ form.visitor2_name|as_crispy_field }}</div>
+                        <div>{{ form.visitor2_relation|as_crispy_field }}</div>
+                        <div>{{ form.visitor2_contact|as_crispy_field }}</div>
                     </div>
-                    <div class="col-md-4">
-                        {{ form.board_name|as_crispy_field }}
+                </section>
+
+                <!-- Enrolled For -->
+                <section>
+                    <h5
+                        class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                        <i class="fas fa-id-card-alt"></i> Enrollment Details
+                    </h5>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <div class="lg:col-span-2">{{ form.enrolled_for|as_crispy_field }}</div>
+                        <div>{{ form.sams_login_id|as_crispy_field }}</div>
+                        <div>{{ form.sams_password|as_crispy_field }}</div>
+                        <div>{{ form.apaar_id|as_crispy_field }}</div>
                     </div>
-                    <div class="col-md-4">
-                        {{ form.college_roll_no|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.batch|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.eleventh_year|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.twelfth_year|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.course|as_crispy_field }}
-                    </div>
+                </section>
+
+                <!-- Fees & Facilities -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <!-- Facilities -->
+                    <section>
+                        <h5
+                            class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                            <i class="fas fa-concierge-bell"></i> Facilities
+                        </h5>
+                        <div class="space-y-4">
+                            {{ form.hostel_fees|as_crispy_field }}
+                            {{ form.academics_accommodation|as_crispy_field }}
+                        </div>
+                    </section>
+
+                    <!-- Installments -->
+                    <section>
+                        <h5
+                            class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                            <i class="fas fa-money-check-alt"></i> Installments
+                        </h5>
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            {{ form.installment1|as_crispy_field }}
+                            {{ form.installment2|as_crispy_field }}
+                            {{ form.installment3|as_crispy_field }}
+                            {{ form.installment4|as_crispy_field }}
+                            {{ form.installment5|as_crispy_field }}
+                            {{ form.installment6|as_crispy_field }}
+                        </div>
+                    </section>
                 </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">Visitors List :</h5>
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.visitor1_name|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.visitor1_relation|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.visitor1_contact|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.visitor2_name|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.visitor2_relation|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.visitor2_contact|as_crispy_field }}
-                    </div>
-                </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">Enrolled For :</h5>
-                    </div>
-                    <div class="col-md-6">
-                        {{ form.enrolled_for|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.sams_login_id|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.sams_password|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
-                        {{ form.apaar_id|as_crispy_field }}
-                    </div>
-                </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">FACILITIES :</h5>
-                    </div>
-                    <div class="col-md-6">
-                        {{ form.hostel_fees|as_crispy_field }}
-                    </div>
-                    <div class="col-md-6">
-                        {{ form.academics_accommodation|as_crispy_field }}
-                    </div>
-                </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">Installments:</h5>
-                    </div>
-                    <div class="col-md-2">
-                        {{ form.installment1|as_crispy_field }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form.installment2|as_crispy_field }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form.installment3|as_crispy_field }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form.installment4|as_crispy_field }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form.installment5|as_crispy_field }}
-                    </div>
-                    <div class="col-md-2">
-                        {{ form.installment6|as_crispy_field }}
-                    </div>
-                </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <h5 class="border-bottom pb-2">Fees Structure:</h5>
-                    </div>
-                    <div class="col-md-3">
+
+                <!-- Fee Structure Grid -->
+                <section>
+                    <h5
+                        class="flex items-center gap-2 text-lg font-bold text-indigo-700 dark:text-indigo-400 border-b border-slate-200 dark:border-slate-700 pb-2 mb-6">
+                        <i class="fas fa-receipt"></i> Fee Structure
+                    </h5>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
                         {{ form.tms_fees|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form.admitted_college_fees|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form.college_dress|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form.books|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form.college_transportation|as_crispy_field }}
-                    </div>
-                    <div class="col-md-3">
                         {{ form.tms_dress|as_crispy_field }}
                     </div>
-                </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-12">
-                        <p class="text-muted">
-                            <strong>Facilities and standards in the Fee Structure:</strong> 
-                            Hostel accommodation, Medical facilities, Study material, Recreational & Sports facilities.
+                    <div
+                        class="mt-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-lg flex items-start gap-3">
+                        <i class="fas fa-info-circle text-amber-600 dark:text-amber-400 mt-0.5"></i>
+                        <p class="text-sm text-amber-800 dark:text-amber-200">
+                            <strong>Note on Standards:</strong> Fee Structure includes Hostel accommodation, Medical
+                            facilities, Study material, and Recreational & Sports facilities.
                         </p>
                     </div>
-                </div>
-                
-                <div class="row mb-4">
-                    <div class="col-md-4">
-                        {{ form.guardian_signature|as_crispy_field }}
+                </section>
+
+                <!-- Signatures -->
+                <section
+                    class="bg-slate-50 dark:bg-slate-900/50 p-6 rounded-xl border border-slate-200 dark:border-slate-700">
+                    <h5 class="text-lg font-bold text-indigo-700 dark:text-indigo-400 mb-6 text-center">Declarations &
+                        Signatures</h5>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div>{{ form.guardian_signature|as_crispy_field }}</div>
+                        <div>{{ form.student_signature|as_crispy_field }}</div>
+                        <div>{{ form.tms_signature|as_crispy_field }}</div>
                     </div>
-                    <div class="col-md-4">
-                        {{ form.student_signature|as_crispy_field }}
-                    </div>
-                    <div class="col-md-4">
-                        {{ form.tms_signature|as_crispy_field }}
-                    </div>
-                </div>
-                
-                <div class="text-center">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <i class="fas fa-paper-plane"></i> Submit Admission Form
+                </section>
+
+                <div class="flex justify-center pt-8">
+                    <button type="submit"
+                        class="px-10 py-4 bg-gradient-to-r from-blue-600 to-indigo-700 text-white font-bold text-lg rounded-xl shadow-lg shadow-blue-500/30 hover:shadow-blue-500/50 hover:-translate-y-1 transition-all duration-200">
+                        <i class="fas fa-paper-plane mr-2"></i> Submit Admission Form
                     </button>
                 </div>
             </form>
@@ -270,297 +221,81 @@
     </div>
 </div>
 
-{% comment %} <!-- Modal for Full Image Preview -->
-<div class="modal fade" id="imagePreviewModal" tabindex="-1" aria-labelledby="imagePreviewModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="imagePreviewModalLabel">
-                    <i class="fas fa-image me-2"></i>Student Photo Preview
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body text-center">
-                <div id="modalImageContainer">
-                    <!-- Image will be loaded here dynamically -->
+<!-- Modal -->
+<div id="imagePreviewModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog"
+    aria-modal="true">
+    <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity backdrop-blur-sm" onclick="closeModal()">
+    </div>
+    <div class="fixed inset-0 z-10 overflow-y-auto">
+        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+            <div
+                class="relative transform overflow-hidden rounded-2xl bg-white dark:bg-slate-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+                <div class="bg-white dark:bg-slate-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+                    <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left w-full">
+                        <h3 class="text-lg font-semibold leading-6 text-slate-900 dark:text-white mb-4"
+                            id="modal-title">Student Photo Preview</h3>
+                        <div class="mt-2 flex justify-center bg-slate-100 dark:bg-slate-900 rounded-lg p-2">
+                            <img id="modalImage" src="" alt="Preview" class="max-h-[70vh] rounded object-contain">
+                        </div>
+                    </div>
                 </div>
-                <div id="modalNoImage" class="d-none">
-                    <i class="fas fa-user-circle fa-5x text-muted mb-3"></i>
-                    <p class="text-muted">No photo available</p>
+                <div class="bg-slate-50 dark:bg-slate-900/50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 gap-3">
+                    <button type="button"
+                        class="inline-flex w-full justify-center rounded-lg bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 sm:ml-3 sm:w-auto"
+                        onclick="document.getElementById('student_image_upload').click(); closeModal()">Change
+                        Photo</button>
+                    <button type="button"
+                        class="mt-3 inline-flex w-full justify-center rounded-lg bg-white dark:bg-slate-700 px-3 py-2 text-sm font-semibold text-slate-900 dark:text-white shadow-sm ring-1 ring-inset ring-slate-300 dark:ring-slate-600 hover:bg-slate-50 dark:hover:bg-slate-600 sm:mt-0 sm:w-auto"
+                        onclick="closeModal()">Close</button>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" onclick="document.getElementById('student_image_upload').click()">
-                    <i class="fas fa-upload me-1"></i> Change Photo
-                </button>
             </div>
         </div>
     </div>
-</div> {% endcomment %}
+</div>
 
-<!-- JavaScript for Image Upload and Preview -->
 <script>
-let currentImageUrl = null;
-
-function showPreview() {
-    const imageInput = document.getElementById('student_image_upload');
-    const modalImageContainer = document.getElementById('modalImageContainer');
-    const modalNoImage = document.getElementById('modalNoImage');
-    
-    if (imageInput.files && imageInput.files[0]) {
-        const file = imageInput.files[0];
-        const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            modalImageContainer.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" alt="Student Photo Preview" style="max-height: 70vh;">`;
-            modalNoImage.classList.add('d-none');
-        }
-        
-        reader.readAsDataURL(file);
-    } else if (currentImageUrl) {
-        modalImageContainer.innerHTML = `<img src="${currentImageUrl}" class="img-fluid rounded" alt="Student Photo Preview" style="max-height: 70vh;">`;
-        modalNoImage.classList.add('d-none');
-    } else {
-        modalImageContainer.innerHTML = '';
-        modalNoImage.classList.remove('d-none');
+    // Simple Modal and Preview Logic
+    function showPreview(src) {
+        if (!src) return;
+        document.getElementById('modalImage').src = src;
+        document.getElementById('imagePreviewModal').classList.remove('hidden');
     }
-    
-    // Show the modal
-    const modal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
-    modal.show();
-}
 
-document.addEventListener('DOMContentLoaded', function() {
+    function closeModal() {
+        document.getElementById('imagePreviewModal').classList.add('hidden');
+    }
+
+    // File Input Logic
     const imageInput = document.getElementById('student_image_upload');
     const imageDisplayContainer = document.getElementById('imageDisplayContainer');
-    const fileInfo = document.getElementById('fileInfo');
-    const fileNameSpan = document.getElementById('fileName');
-    const form = document.getElementById('admissionForm');
-    
-    // Store current image URL if exists
-    const existingImage = document.querySelector('#imageDisplayContainer img');
-    if (existingImage && existingImage.src) {
-        currentImageUrl = existingImage.src;
-    }
-    
-    if (imageInput) {
-        imageInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const file = this.files[0];
-                
-                // Show file info
-                fileNameSpan.textContent = file.name;
-                fileInfo.style.display = 'block';
-                
-                // Check file size (5MB limit)
-                if (file.size > 5 * 1024 * 1024) {
-                    alert('File size must be less than 5MB');
-                    this.value = '';
-                    fileInfo.style.display = 'none';
-                    return;
-                }
-                
-                // Check file type
-                const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-                if (!validTypes.includes(file.type)) {
-                    alert('Please upload a valid image file (JPG, PNG, JPEG, GIF)');
-                    this.value = '';
-                    fileInfo.style.display = 'none';
-                    return;
-                }
-                
-                // Create preview in display container
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    // Update display container with new image
-                    imageDisplayContainer.innerHTML = `
-                        <img src="${e.target.result}" 
-                                alt="Student Photo" 
-                                class="img-fluid rounded clickable-preview" 
-                                style="max-height: 150px; object-fit: cover; cursor: pointer;"
-                                data-bs-toggle="modal" 
-                                data-bs-target="#imagePreviewModal">
-                    `;
-                    
-                    // Update current image URL for modal
-                    currentImageUrl = e.target.result;
-                }
-                
-                reader.readAsDataURL(file);
-            } else {
-                // No file selected
-                fileInfo.style.display = 'none';
-            }
-        });
-    }
-    
-    // Form validation for file upload
-    form.addEventListener('submit', function(e) {
-        if (imageInput && imageInput.files.length > 0) {
-            const file = imageInput.files[0];
-            
-            // Check file size
+    const fileNameDisplay = document.getElementById('fileName');
+
+    imageInput.addEventListener('change', function () {
+        if (this.files && this.files[0]) {
+            const file = this.files[0];
+
+            // Validate size (5MB)
             if (file.size > 5 * 1024 * 1024) {
-                e.preventDefault();
-                alert('Image file size must be less than 5MB');
-                return false;
+                alert('File too large (Max 5MB)');
+                this.value = '';
+                return;
             }
-            
-            // Check file type
-            const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
-            if (!validTypes.includes(file.type)) {
-                e.preventDefault();
-                alert('Please upload a valid image file (JPG, PNG, JPEG, GIF)');
-                return false;
-            }
-        }
-        
-        return true;
-    });
-    
-    // Handle form reset
-    form.addEventListener('reset', function() {
-        // Reset image preview
-        fileInfo.style.display = 'none';
-        
-        // Clear file input
-        if (imageInput) {
-            imageInput.value = '';
-        }
-        
-        // Restore original image if exists
-        if (currentImageUrl) {
-            imageDisplayContainer.innerHTML = `
-                <img src="${currentImageUrl}" 
-                        alt="Student Photo" 
-                        class="img-fluid rounded clickable-preview" 
-                        style="max-height: 150px; object-fit: cover; cursor: pointer;"
-                        data-bs-toggle="modal" 
-                        data-bs-target="#imagePreviewModal">
-            `;
-        } else {
-            imageDisplayContainer.innerHTML = `
-                <div class="border rounded p-3 bg-light" style="height: 150px; display: flex; align-items: center; justify-content: center;">
-                    <div>
-                        <i class="fas fa-user-circle fa-3x text-muted"></i>
-                        <p class="mt-2 small text-muted mb-0">No photo uploaded</p>
+
+            // Update UI
+            fileNameDisplay.textContent = file.name;
+            fileNameDisplay.classList.remove('hidden');
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                imageDisplayContainer.innerHTML = `
+                    <img src="${e.target.result}" class="w-full h-full object-cover" onclick="showPreview(this.src)">
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity" onclick="document.getElementById('student_image_upload').click()">
+                        <span class="text-white text-sm font-medium"><i class="fas fa-edit mr-1"></i> Change</span>
                     </div>
-                </div>
-            `;
+                `;
+            }
+            reader.readAsDataURL(file);
         }
     });
-    
-    // Initialize Bootstrap modal event
-    const imagePreviewModal = document.getElementById('imagePreviewModal');
-    if (imagePreviewModal) {
-        imagePreviewModal.addEventListener('show.bs.modal', function () {
-            showPreview();
-        });
-    }
-});
 </script>
-
-<style>
-/* Compact styles for the student photo section */
-.card {
-    border: 1px solid rgba(0,0,0,.125);
-}
-
-.card-header.bg-light {
-    background-color: #f8f9fa !important;
-    border-bottom: 1px solid rgba(0,0,0,.125);
-}
-
-.upload-btn-wrapper {
-    position: relative;
-    overflow: hidden;
-}
-
-.upload-btn-wrapper input[type=file] {
-    font-size: 100px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    opacity: 0;
-}
-
-/* Image display styles */
-#imageDisplayContainer img {
-    width: 100%;
-    height: 150px;
-    object-fit: cover;
-    border-radius: 4px;
-    transition: transform 0.2s;
-}
-
-#imageDisplayContainer img:hover {
-    transform: scale(1.02);
-}
-
-.clickable-preview {
-    cursor: pointer;
-}
-
-/* File info styling */
-#fileInfo {
-    background-color: #e9ecef;
-    padding: 8px 12px;
-    border-radius: 4px;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-#fileInfo .btn-link {
-    text-decoration: none;
-    font-size: 13px;
-}
-
-#fileInfo .btn-link:hover {
-    text-decoration: underline;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .card-body.p-3 {
-        padding: 1rem !important;
-    }
-    
-    #fileInfo {
-        flex-direction: column;
-        gap: 5px;
-    }
-}
-
-/* Button styles */
-.btn-outline-primary:hover {
-    background-color: #0d6efd;
-    color: white;
-}
-
-/* Modal styles */
-.modal-dialog {
-    max-width: 800px;
-}
-
-.modal-body img {
-    max-width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-
-/* Form field spacing */
-.form-group {
-    margin-bottom: 1rem;
-}
-
-/* Ensure crispy forms looks good */
-.asteriskField {
-    color: #dc3545;
-    margin-left: 2px;
-}
-</style>
 {% endblock %}
